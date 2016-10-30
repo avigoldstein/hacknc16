@@ -1,6 +1,79 @@
 <!DOCTYPE html>
 
 <html>
+  <head>
+      <title>Lingua Franca Messaging App v1</title>
 
+      <!-- Latest compiled and minified CSS-->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+      <link rel="stylesheet" type="text/css" href="linguafranca.css">
+    </head>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+  <script>
+
+  var socket = io.connect();
+  var nickname = '';
+
+  console.log('nickname: ' + nickname);
+
+  $(document).ready(function(){
+
+    $('#setname').click(function(e){
+        nickname = $('#n').val();
+
+        console.log("nickname is: " + nickname);
+    });
+
+    $('#send').submit(function(){
+
+    var message = nickname + ": " + $('#m').val();
+    var my_message = "me: " + $('#m').val();
+
+    socket.emit('my chat message', {message: message, my_message: my_message});
+       $('#m').val('');
+       return false;
+    });
+    // socket.on('self chat message', function(msg){
+    //   console.log("woop woop");
+    //   $('#messages').append($('<li id="right">').text(msg));
+    // });
+    socket.on('my chat message', function(msg){
+      console.log("oh no" + msg);
+      $('#messages').append($('<li>').text(msg));
+    });
+  });
+
+  </script>
+
+  <body>
+
+      <ul id="messages"></ul>
+
+      <form id="send" action="">
+          <input id="m" autocomplete="off" /><button>Send</button>
+      </form>
+
+      <div id="names_and_info">
+        <input id="n" type="text" autocomplete="off" /><button id ="setname">Set Nickname</button>
+        <p>From: </p>
+        <select>
+          <option value="en">English</option>
+          <option value="es">Spanish</option>
+        </select>
+        <p>To: </p>
+
+        <select>
+          <option value="es">Spanish</option>
+          <option value="en">English</option>
+        </select>
+     </div>
+
+
+  </body>
 
 </html>
